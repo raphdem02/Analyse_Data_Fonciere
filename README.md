@@ -2,7 +2,7 @@
 ## Installer les dépendances nécessaires et flask  
 Installer flask de préférence dans un environnement virtuel, ce lien explique comment faire : [https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)  
 
-Lancer la commande ***pip3 install -r requirements.txt*** pour installer les dépendances nécessaires
+Lancer la commande '''pip3 install -r requirements.txt''' pour installer les dépendances nécessaires
 
 ## Lancer l'application 
 
