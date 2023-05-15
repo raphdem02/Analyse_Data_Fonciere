@@ -67,18 +67,9 @@
 			</div>
 		</div>
 	</div>
-<!-- <body>
-  
-  <div id='chart' class='chart'”></div>
-</body><script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-<script type='text/javascript'>
-  var graphs = {{graphJSON | safe}};
-  Plotly.plot('chart',graphs,{});
-</script> -->
-
 <div class="container">
     <div class="row">
-        <h1 class = "text-center">Argent total dépensé par mois selon les types de mutation pendant l'année</h1>
+        <h1 class="text-center">Argent total dépensé par mois selon les types de mutation pendant l'année 2019</h1>
         <div class="col-md-6 col-md-offset-3">
             <h2>Select Mutation Type:</h2>
             <select id="mutation-type" onchange="updateGraph()">
@@ -96,10 +87,10 @@
 <script type="text/javascript">
     var graphs = {{ graphJSON | safe }};
     var mutationTypeSelect = document.getElementById("mutation-type");
+    var chart = document.getElementById("chart");
 
     function updateGraph() {
         var selectedMutation = mutationTypeSelect.value;
-        var chart = document.getElementById("chart");
 
         Plotly.purge(chart);
         Plotly.plot(chart, JSON.parse(graphs[selectedMutation]), {});
@@ -107,6 +98,7 @@
 
     updateGraph();  // Initial update based on default mutation type
 </script>
+
 
 </body>
 </html>
