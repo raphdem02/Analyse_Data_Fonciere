@@ -1,6 +1,13 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+import pandas as pd
+import json
+import plotly
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
+import plotly.utils as plotly_utils
 
 app = Flask(__name__)
 
@@ -8,6 +15,83 @@ app = Flask(__name__)
 @app.route('/about/')
 def index():
     return render_template('about.html')
+
+def plotMutations(mut, data):
+    fig = go.Figure()
+    MUTATIONS = data['Nature mutation'].unique()  # Mettre à jour les mutations disponible
+
+    for m in MUTATIONS:
+        temp = data[data['Nature mutation'] == m]
+        temp['Date mutation'] = pd.to_datetime(temp['Date mutation'], format='%d/%m/%Y')  # Convertir la colonne de date en format datetime
+        result = temp.groupby(temp['Date mutation'].dt.to_period("M"))['Valeur fonciere'].sum()
+        result.index = result.index.to_timestamp()
+        x = result.index
+        y = result.values
+        
+        if m == mut:
+            fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#0b53c1", width=2.4), name=m, hovertemplate='(%{x}, %{y})'))
+            fig.add_trace(go.Scatter(x=x, y=y, mode='markers', marker=dict(symbol='circle', color="#0b53c1", size=8, line=dict(color="#0b53c1", width=2.4)), name=m, hovertemplate='(%{x}, %{y})'))
+        else:
+            fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#BFBFBF", width=1.5), name=m, hovertemplate='(%{x}, %{y})'))
+
+    
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
+
+@app.route('/widget/')
+def DynamicPLot():
+    Data = pd.read_csv('valeursfoncieres-2019.txt', sep='|')
+    columns_to_keep = ['Date mutation','Nature mutation','Valeur fonciere','Code postal','Commune','Code departement','Code commune','Nombre de lots','Code type local','Type local','Surface reelle bati','Nombre pieces principales','Surface terrain']
+    Data['Date mutation'] = pd.to_datetime(Data['Date mutation'], format='%d/%m/%Y')
+    Data['Code departement'] = Data['Code departement'].astype(str)
+    Data = Data[columns_to_keep]
+    Data = Data.dropna()
+    Data['Valeur fonciere'] = pd.to_numeric(Data['Valeur fonciere'].str.replace(',', '.'))
+    MUTATIONS = Data['Nature mutation'].unique()
+    graphJSON = {}
+    for mutation in MUTATIONS:
+        graphJSON[mutation] = plotMutations(mutation, Data)
+    return render_template('Widget.html' , graphJSON=graphJSON)
+
+"""def plotMutations(mut, data):
+    fig = go.Figure()
+    MUTATIONS = data['Nature mutation'].unique()
+
+    for m in MUTATIONS:
+        temp = data[data['Nature mutation'] == m]
+        temp['Date mutation'] = pd.to_datetime(temp['Date mutation'], format='%d/%m/%Y')
+        result = temp.groupby(temp['Date mutation'].dt.to_period("M"))['Valeur fonciere'].sum()
+        result.index = result.index.to_timestamp()
+        x = result.index
+        y = result.values
+        
+        if m == mut:
+            fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#0b53c1", width=2.4), name=m, hovertemplate='(%{x}, %{y})'))
+            fig.add_trace(go.Scatter(x=x, y=y, mode='markers', marker=dict(symbol='circle', color="#0b53c1", size=8, line=dict(color="#0b53c1", width=2.4)), name=m, hovertemplate='(%{x}, %{y})'))
+        else:
+            fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color="#BFBFBF", width=1.5), name=m, hovertemplate='(%{x}, %{y})'))
+
+    return fig.to_json()
+
+@app.route('/widget/')
+def DynamicPlot():
+    Data = pd.read_csv('valeursfoncieres-2019.txt', sep='|')
+    columns_to_keep = ['Date mutation', 'Nature mutation', 'Valeur fonciere', 'Code postal', 'Commune', 'Code departement', 'Code commune', 'Nombre de lots', 'Code type local', 'Type local', 'Surface reelle bati', 'Nombre pieces principales', 'Surface terrain']
+    Data['Date mutation'] = pd.to_datetime(Data['Date mutation'], format='%d/%m/%Y')
+    Data['Code departement'] = Data['Code departement'].astype(str)
+    Data = Data[columns_to_keep]
+    Data = Data.dropna()
+    Data['Valeur fonciere'] = pd.to_numeric(Data['Valeur fonciere'].str.replace(',', '.'))
+
+    MUTATIONS = Data['Nature mutation'].unique()
+    graphJSON = {}
+    
+    for mutation in MUTATIONS:
+        graphJSON[mutation] = plotMutations(mutation, Data)
+
+    return render_template('Widget.html', graphJSON=json.dumps(graphJSON))"""
+
 
 @app.route('/2018/')
 def data2017():

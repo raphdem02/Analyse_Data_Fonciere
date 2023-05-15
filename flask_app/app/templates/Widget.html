@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Analyse des données de valeurs foncières</title>
+<!--mobile apps-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!--//mobile apps-- >
+<!-- Custom Theme files -->
+<link href="/static/css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+<link href="/static/css/style.css" type="text/css" rel="stylesheet" media="all">
+<!-- //Custom Theme files -->
+<!-- js -->
+<script src="/static/js/jquery-1.11.1.min.js"></script> 
+<!-- //js -->
+<!--web-fonts-->
+<link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>	
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800italic,800' rel='stylesheet' type='text/css'>
+<!--//web-fonts-->
+<!-- start-smooth-scrolling-->
+<script type="text/javascript" src="/static/js/move-top.js"></script>
+<script type="text/javascript" src="/static/js/easing.js"></script>	
+<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$(".scroll").click(function(event){		
+				event.preventDefault();
+		
+		$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+			});
+		});
+</script>
+<!--//end-smooth-scrolling-->	
+</head>
+<body>
+	<!--banner-->
+	<div class="banner">
+		<div class="effect5"><!--shadow effect-->
+			<div class="container">
+				<div class="logo">
+					<h1><a href="about.html"><img src="https://img.icons8.com/ios-filled/500/000000/cottage--v1.png"/></a></h1>
+				</div>
+				<div class="top-nav">
+					<nav class="navbar navbar-default">
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">Menu
+								
+							</button>
+						</div>
+						<!-- Collect the nav links, forms, and other content for toggling -->
+						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav navbar-center">
+								<li><a href="/about/"><span>A</span><span>B</span><span>O</span><span>U</span><span>T</span></a></li>
+								<li><a href="/2018/" class="link link--yaku"><span>2</span><span>0</span><span>1</span><span>8</span></a></li>
+								<li><a href="/2019/" class="link link--yaku"><span>2</span><span>0</span><span>1</span><span>9</span></a></li>
+								<li><a href="/2020/" class="link link--yaku"><span>2</span><span>0</span><span>2</span><span>0</span></a></li>
+								<li><a href="/2021/" class="link link--yaku"><span>2</span><span>0</span><span>2</span><span>1</span></a></li>
+								<li><a href="/2022/" class="link link--yaku"><span>2</span><span>0</span><span>2</span><span>2</span></a></li>
+								<li><a href="/comparaison/" class="link link--yaku"><span>C</span><span>O</span><span>M</span><span>P</span><span>A</span><span>R</span><span>A</span><span>I</span><span>S</span><span>O</span><span>N</span></a></li>
+								<li class = "active"><a href="/widget/" class="link link--yaku"><span>W</span><span>I</span><span>D</span><span>G</span><span>E</span><span>T</span></a></li>
+							</ul>
+							<div class="clearfix"> </div>
+						</div>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- <body>
+  
+  <div id='chart' class='chart'”></div>
+</body><script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script type='text/javascript'>
+  var graphs = {{graphJSON | safe}};
+  Plotly.plot('chart',graphs,{});
+</script> -->
+
+<div class="container">
+    <div class="row">
+        <h1 class = "text-center">Argent total dépensé par mois selon les types de mutation pendant l'année</h1>
+        <div class="col-md-6 col-md-offset-3">
+            <h2>Select Mutation Type:</h2>
+            <select id="mutation-type" onchange="updateGraph()">
+                {% for mutation in graphJSON %}
+                    <option value="{{ mutation }}">{{ mutation }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+
+<div id="chart" class="chart"></div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script type="text/javascript">
+    var graphs = {{ graphJSON | safe }};
+    var mutationTypeSelect = document.getElementById("mutation-type");
+
+    function updateGraph() {
+        var selectedMutation = mutationTypeSelect.value;
+        var chart = document.getElementById("chart");
+
+        Plotly.purge(chart);
+        Plotly.plot(chart, JSON.parse(graphs[selectedMutation]), {});
+    }
+
+    updateGraph();  // Initial update based on default mutation type
+</script>
+
+</body>
+</html>
