@@ -31,4 +31,4 @@ def data2021():
 
 @app.route('/comparaison/')
 def datacomp():
-    return render_template('comp.html')
+    return render_template('Comparaison.html')
