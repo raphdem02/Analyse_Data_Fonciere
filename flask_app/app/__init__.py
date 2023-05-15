@@ -16,6 +16,7 @@ app = Flask(__name__)
 def index():
     return render_template('about.html')
 
+
 def plotMutation(mut, data):
     fig = go.Figure()
 
@@ -35,7 +36,7 @@ def plotMutation(mut, data):
 @app.route('/widget/')
 def DynamicPlot():
     Data = pd.read_csv('valeursfoncieres-2019.txt', sep='|')
-    columns_to_keep = ['Date mutation', 'Nature mutation', 'Valeur fonciere', 'Code postal', 'Commune', 'Code departement', 'Code commune', 'Nombre de lots', 'Code type local', 'Type local', 'Surface reelle bati', 'Nombre pieces principales', 'Surface terrain']
+    columns_to_keep = ['Date mutation', 'Nature mutation', 'Valeur fonciere', 'Code postal','Code departement']
     Data['Date mutation'] = pd.to_datetime(Data['Date mutation'], format='%d/%m/%Y')
     Data['Code departement'] = Data['Code departement'].astype(str)
     Data = Data[columns_to_keep]
